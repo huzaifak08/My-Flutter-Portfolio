@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_profile/screens/constants.dart';
+import 'package:flutter_profile/constants.dart';
 import 'package:flutter_profile/screens/home/home_screen.dart';
-import 'package:flutter_profile/screens/main/main_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {

@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_profile/screens/constants.dart';
+import 'package:flutter_profile/constants.dart';
+import 'package:flutter_profile/responsive.dart';
 
 class HomeBanner extends StatelessWidget {
   const HomeBanner({
@@ -10,7 +11,7 @@ class HomeBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 3,
+      aspectRatio: Responsive.isMobile(context) ? 2.5 : 3,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -27,23 +28,29 @@ class HomeBanner extends StatelessWidget {
               children: [
                 Text(
                   "Discover My Amazing \n Art Space",
-                  style: Theme.of(context).textTheme.headline3!.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.white),
+                  style: Responsive.isDesktop(context)
+                      ? Theme.of(context).textTheme.headline3!.copyWith(
+                          fontWeight: FontWeight.bold, color: Colors.white)
+                      : Theme.of(context).textTheme.headline5!.copyWith(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                 ),
+                if (Responsive.isMobileLarge(context))
+                  const SizedBox(height: defaultPadding / 2),
                 MyBuildAnimatedText(),
                 SizedBox(height: defaultPadding),
-                ElevatedButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: defaultPadding * 2,
-                          vertical: defaultPadding),
-                      backgroundColor: primaryColor,
-                    ),
-                    child: Text(
-                      "EXPLORE NOW",
-                      style: TextStyle(color: darkColor),
-                    ))
+                if (!Responsive.isMobile(context))
+                  ElevatedButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: defaultPadding * 2,
+                            vertical: defaultPadding),
+                        backgroundColor: primaryColor,
+                      ),
+                      child: Text(
+                        "EXPLORE NOW",
+                        style: TextStyle(color: darkColor),
+                      ))
               ],
             ),
           )
@@ -62,25 +69,41 @@ class MyBuildAnimatedText extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.subtitle1!,
+      maxLines: 1,
       child: Row(
         children: [
-          FlutterCodedText(),
-          SizedBox(width: defaultPadding / 2),
+          if (!Responsive.isMobile(context)) FlutterCodedText(),
+          if (!Responsive.isMobile(context))
+            SizedBox(width: defaultPadding / 2),
           Text("I build "),
-          AnimatedTextKit(
-            animatedTexts: [
-              TyperAnimatedText("Responsive Web and Mobile APP.",
-                  speed: Duration(milliseconds: 60)),
-              TyperAnimatedText("Complete E-Commerce APP UI.",
-                  speed: Duration(milliseconds: 60)),
-              TyperAnimatedText("Chat APP with Dark and Light Theme.",
-                  speed: Duration(milliseconds: 60)),
-            ],
-          ),
-          FlutterCodedText(),
-          SizedBox(width: defaultPadding / 2),
+          Responsive.isMobile(context)
+              ? Expanded(child: AnimatedText())
+              : AnimatedText(),
+          if (!Responsive.isMobile(context))
+            SizedBox(width: defaultPadding / 2),
+          if (!Responsive.isMobile(context)) FlutterCodedText(),
         ],
       ),
+    );
+  }
+}
+
+class AnimatedText extends StatelessWidget {
+  const AnimatedText({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedTextKit(
+      animatedTexts: [
+        TyperAnimatedText("Responsive Web and Mobile APP.",
+            speed: Duration(milliseconds: 60)),
+        TyperAnimatedText("Complete E-Commerce APP UI.",
+            speed: Duration(milliseconds: 60)),
+        TyperAnimatedText("Chat APP with Dark and Light Theme.",
+            speed: Duration(milliseconds: 60)),
+      ],
     );
   }
 }
